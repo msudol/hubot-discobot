@@ -1,8 +1,11 @@
-/* The following code is inspired (Initially Stolen) by disbot at https://github.com/atomicptr/disbot 
-That repo ha been archived by it's owner so my plan is to upgrade and improve to a more recent version 
-of the discord.api and implement more discord functionality within a hub framework, I felt that disbot 
-was a good starting point instead of re-inventing the wheel.
-*/
+// Description:
+//   Adapter for Hubot to communicate on Discord
+//
+// Commands:
+//   None
+//
+// Configuration:
+//   HUBOT_DISCORD_TOKEN - authentication token for bot
 
 let Adapter, Robot, TextMessage;
 try {
@@ -14,29 +17,12 @@ try {
 
 const Discord = require("discord.js");
 
-
 class DiscordAdapter extends Adapter {
-    
     constructor(robot) {
-        
-        {
-          if (false) { super(); }
-          let thisFn = (() => { return this; }).toString();
-          let thisName = thisFn.slice(thisFn.indexOf('return') + 6 + 1, thisFn.indexOf(';')).trim();
-          eval(`${thisName} = this;`);
-        }
-        
-        // onready
         this.onready = this.onready.bind(this);
-        
-        // onmessage
         this.onmessage = this.onmessage.bind(this);
-        
-        // on disconnected
         this.ondisconnected = this.ondisconnected.bind(this);
-        
         super(robot);
-        
         this.rooms = {};
     }
 
@@ -82,14 +68,13 @@ class DiscordAdapter extends Adapter {
     }
 
     run() {
-        this.token = process.env.Discord_TOKEN;
+        this.token = process.env.HUBOT_DISCORD_TOKEN;
 
         if ((this.token == null)) {
-            this.robot.logger.error("Discobot Error: No token specified, please set an environment variable named Discord_TOKEN");
+            this.robot.logger.error("Discobot Error: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN");
             return;
         }
 
-        // THIS SHOULD BE A PROCESS.ENV SETTING IN THE FUTURE
         this.discord = new Discord.Client({autoReconnect: true});
 
         this.discord.on("ready", this.onready);
@@ -106,7 +91,7 @@ class DiscordAdapter extends Adapter {
         return this.emit("connected");
     }
 
-    onmessage(message) {  
+    onmessage(message) {
         if (message.author.id === this.discord.user.id) { return; } // skip messages from the bot itself
 
         const user = this.robot.brain.userForId(message.author.id);
@@ -128,6 +113,4 @@ class DiscordAdapter extends Adapter {
     }
 }
 
-exports.use = function(robot) {};
-
-new DiscordAdapter(robot);
+exports.use = robot => new DiscordAdapter(robot);
