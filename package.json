@@ -2,7 +2,7 @@
     "name": "hubot-discord-adapter",
     "version": "0.0.2",
     "description": "Hubot Adapter for discord.js",
-    "main": "src/discord.js",
+    "main": "src/discord.coffee",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },

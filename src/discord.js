@@ -55,7 +55,7 @@ class DiscordAdapter extends Adapter {
             });
         };
 
-        this.robot.logger.debug(`Discord-Hubot: Try to send message: \"${message}\" to channel: ${channelId}`);
+        this.robot.logger.debug(`Discobot: Try to send message: \"${message}\" to channel: ${channelId}`);
 
         if (this.rooms[channelId] != null) { // room is already known and cached
             return sendMessage(this.rooms[channelId], message, callback);
@@ -85,7 +85,7 @@ class DiscordAdapter extends Adapter {
         this.token = process.env.Discord_TOKEN;
 
         if ((this.token == null)) {
-            this.robot.logger.error("Discord-Hubot Error: No token specified, please set an environment variable named Discord_TOKEN");
+            this.robot.logger.error("Discobot Error: No token specified, please set an environment variable named Discord_TOKEN");
             return;
         }
 
@@ -100,7 +100,7 @@ class DiscordAdapter extends Adapter {
     }
 
     onready() {
-        this.robot.logger.info(`Discord-Hubot: Logged in as User: ${this.discord.user.username}#${this.discord.user.discriminator}`);
+        this.robot.logger.info(`Discobot: Logged in as User: ${this.discord.user.username}#${this.discord.user.discriminator}`);
         this.robot.name = this.discord.user.username.toLowerCase();
 
         return this.emit("connected");
@@ -119,12 +119,12 @@ class DiscordAdapter extends Adapter {
 
         const text = message.content;
 
-        this.robot.logger.debug(`Discord-Hubot: Message (ID: ${message.id} from: ${user.name}#${user.discriminator}): ${text}`);
+        this.robot.logger.debug(`Discobot: Message (ID: ${message.id} from: ${user.name}#${user.discriminator}): ${text}`);
         return this.robot.receive(new TextMessage(user, text, message.id));
     }
 
     ondisconnected() {
-        return this.robot.logger.info("Discord-Hubot: Bot lost connection to the server, will auto reconnect soon...");
+        return this.robot.logger.info("Discobot: Bot lost connection to the server, will auto reconnect soon...");
     }
 }
 
