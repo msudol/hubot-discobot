@@ -20,8 +20,7 @@ class DiscordAdapter extends Adapter
 	constructor: (@robot) ->
 		super
 		@rooms = {}
-        @direct_rooms = {}
-
+        
     run: ->
         @token = process.env.HUBOT_DISCORD_TOKEN
 
