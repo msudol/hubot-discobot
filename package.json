@@ -1,6 +1,6 @@
 {
     "name": "discord-hubot-adapter",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Hubot Adapter for discord.js",
     "main": "src/discord.js",
     "scripts": {
@@ -11,10 +11,13 @@
         "parent-require": "^1.0.0"
     },
     "peerDependencies": {
-        "hubot": ">=2.19.0"
+        "hubot": ">=2.19.0",
+        "coffee-script": "^1.12.6",
+        "bufferutil": "^3.0.3",
+        "erlpack@discordapp/erlpack": "*",
     },
     "devDependencies": {
-        "coffee-script": "*"
+        "coffee-script": "^1.12.6"
     },
     "engines": {
         "node": "^6.5.x"
