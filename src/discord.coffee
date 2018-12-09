@@ -7,94 +7,96 @@
 #
 # Configuration:
 #   HUBOT_DISCORD_TOKEN - authentication token for bot
+#   HUBOT_DISCORD_AUTOCONNECT - true/false to have autoReconnect enabled
 
 try
-    {Robot, Adapter, TextMessage} = require "hubot"
+  {Robot, Adapter, TextMessage} = require "hubot"
 catch
-    prequire = require "parent-require"
-    {Robot, Adapter, TextMessage} = prequire "hubot"
+  prequire = require "parent-require"
+  {Robot, Adapter, TextMessage} = prequire "hubot"
 
 Discord = require "discord.js"
 
 class DiscordAdapter extends Adapter
-    constructor: (robot) ->
-        super robot
-        @rooms = {}
+  constructor: (robot) ->
+    super robot
+    @rooms = {}
 
-    messageChannel: (channelId, message, callback) ->
-        robot = @robot
-        sendMessage = (channel, message, callback) ->
-            callback ?= (err, success) -> {}
+  run: ->
+    @token = process.env.HUBOT_DISCORD_TOKEN
+    @autoConnect = process.env.HUBOT_DISCORD_AUTOCONNECT
 
-            channel.sendMessage(message)
-                .then (msg) ->
-                    robot.logger.debug "SUCCESS! Send message to channel #{channel.id}"
-                    callback null, true
-                .catch (err) ->
-                    robot.logger.error "Error while trying to send message #{message}"
-                    robot.logger.error err
-                    callback err, false
+    if not @token?
+      @robot.logger.error "Discobot Error: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
+      return
+    
+    @discord = new Discord.Client autoReconnect: @autoConnect
 
-        @robot.logger.debug "Discobot: Try to send message: \"#{message}\" to channel: #{channelId}"
+    @discord.on "ready", @.onready
+    @discord.on "message", @.onmessage
+    @discord.on "disconnected", @.ondisconnected
 
-        if @rooms[channelId]? # room is already known and cached
-            sendMessage @rooms[channelId], message, callback
-        else # unknown room, try to find it
-            channels = @discord.channels.filter (channel) -> channel.id == channelId
+    @discord.login @token
 
-            if channels.first()?
-                sendMessage channels.first(), message, callback
-            else
-                @robot.logger.error "Unknown channel id: #{channelId}"
-                callback {message: "Unknown channel id: #{channelId}"}, false
+  onready: =>
+    @robot.logger.info "Discobot: Logged in as User: #{@discord.user.username}##{@discord.user.discriminator}"
+    @robot.name = @discord.user.username.toLowerCase()
 
-    send: (envelope, messages...) ->
-        for message in messages
-            @messageChannel envelope.room, message
+    @emit "connected"
 
-    reply: (envelope, messages...) ->
-        for message in messages
-            @messageChannel envelope.room, "<@#{envelope.user.id}> #{message}"
+  onmessage: (message) =>
+    return if message.author.id == @discord.user.id # skip messages from the bot itself
 
-    run: ->
-        @token = process.env.HUBOT_DISCORD_TOKEN
+    user = @robot.brain.userForId message.author.id
 
-        if not @token?
-            @robot.logger.error "Discobot Error: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
-            return
+    user.name = message.author.username
+    user.discriminator = message.author.discriminator
+    user.room = message.channel.id
 
-        @discord = new Discord.Client autoReconnect: true
+    @rooms[user.room] ?= message.channel
 
-        @discord.on "ready", @.onready
-        @discord.on "message", @.onmessage
-        @discord.on "disconnected", @.ondisconnected
+    text = message.content
 
-        @discord.login @token
+    @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
+    @robot.receive new TextMessage(user, text, message.id)
+    
+  messageChannel: (channelId, message, callback) ->
+    robot = @robot
+    sendMessage = (channel, message, callback) ->
+      callback ?= (err, success) -> {}
 
-    onready: =>
-        @robot.logger.info "Discobot: Logged in as User: #{@discord.user.username}##{@discord.user.discriminator}"
-        @robot.name = @discord.user.username.toLowerCase()
+      channel.sendMessage(message)
+        .then (msg) ->
+          robot.logger.debug "SUCCESS! Send message to channel #{channel.id}"
+          callback null, true
+        .catch (err) ->
+          robot.logger.error "Error while trying to send message #{message}"
+          robot.logger.error err
+          callback err, false
 
-        @emit "connected"
+    @robot.logger.debug "Discobot: Try to send message: \"#{message}\" to channel: #{channelId}"
 
-    onmessage: (message) =>
-        return if message.author.id == @discord.user.id # skip messages from the bot itself
+    if @rooms[channelId]? # room is already known and cached
+      sendMessage @rooms[channelId], message, callback
+    else # unknown room, try to find it
+      channels = @discord.channels.filter (channel) -> channel.id == channelId
 
-        user = @robot.brain.userForId message.author.id
+      if channels.first()?
+        sendMessage channels.first(), message, callback
+      else
+        @robot.logger.error "Unknown channel id: #{channelId}"
+        callback {message: "Unknown channel id: #{channelId}"}, false
 
-        user.name = message.author.username
-        user.discriminator = message.author.discriminator
-        user.room = message.channel.id
+  send: (envelope, messages...) ->
+    for message in messages
+      @messageChannel envelope.room, message
 
-        @rooms[user.room] ?= message.channel
+  reply: (envelope, messages...) ->
+    for message in messages
+      @messageChannel envelope.room, "<@#{envelope.user.id}> #{message}"
 
-        text = message.content
-
-        @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
-        @robot.receive new TextMessage(user, text, message.id)
-
-    ondisconnected: =>
-        @robot.logger.info "Discobot: Bot lost connection to the server, will auto reconnect soon..."
+  ondisconnected: =>
+    @robot.logger.info "Discobot: lost connection to the server..."
 
 exports.use = (robot) ->
-    new DiscordAdapter robot
+  new DiscordAdapter robot
