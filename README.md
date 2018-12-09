@@ -1,15 +1,24 @@
 # hubot-discord-adapater
+
 A hubot adapter for the Discord.js API
 
 ## Information
+
+Based on disbot - https://github.com/atomicptr/disbot 
+
+### Changes & TODO
+
+* Upgrade to latest version of discord.js
+* Create more configurable bot instance
+* Extend more discord features into the adapter
 
 More coming soon.
 
 ## Setup
 
-Setup is quite easy just use NPM to install this adapter from github:
+Setup is easy, just use NPM to install this adapter from github:
 
-    npm install https://github.com/msudol/hubot-discord-adapter.git
+    npm install https://github.com/msudol/hubot-discord-adapter.git 
     
 Then run hubot with the adapter flag 
 
