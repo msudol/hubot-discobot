@@ -17,47 +17,10 @@ catch
 Discord = require "discord.js"
 
 class DiscordAdapter extends Adapter
-	constructor: (@robot) ->
-		super
-		@rooms = {}
-        
-    run: ->
-        @token = process.env.HUBOT_DISCORD_TOKEN
+    constructor: (robot) ->
+        super robot
+        @rooms = {}
 
-        if not @token?
-            @robot.logger.error "Discobot Error: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
-            return
-
-        @discord = new Discord.Client autoReconnect: true
-
-        @discord.on "ready", @.onready
-        @discord.on "message", @.onmessage
-        @discord.on "disconnected", @.ondisconnected
-
-        @discord.login @token        
-
-    onready: =>
-        @robot.logger.info "Discobot: Logged in as User: #{@discord.user.username}##{@discord.user.discriminator}"
-        @robot.name = @discord.user.username.toLowerCase()
-
-        @emit "connected"
-
-    onmessage: (message) =>
-        return if message.author.id == @discord.user.id # skip messages from the bot itself
-
-        user = @robot.brain.userForId message.author.id
-
-        user.name = message.author.username
-        user.discriminator = message.author.discriminator
-        user.room = message.channel.id
-
-        @rooms[user.room] ?= message.channel
-
-        text = message.content
-
-        @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
-        @robot.receive new TextMessage(user, text, message.id)
-        
     messageChannel: (channelId, message, callback) ->
         robot = @robot
         sendMessage = (channel, message, callback) ->
@@ -93,8 +56,45 @@ class DiscordAdapter extends Adapter
         for message in messages
             @messageChannel envelope.room, "<@#{envelope.user.id}> #{message}"
 
+    run: ->
+        @token = process.env.HUBOT_DISCORD_TOKEN
+
+        if not @token?
+            @robot.logger.error "Discobot Error: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
+            return
+
+        @discord = new Discord.Client autoReconnect: true
+
+        @discord.on "ready", @.onready
+        @discord.on "message", @.onmessage
+        @discord.on "disconnected", @.ondisconnected
+
+        @discord.login @token
+
+    onready: =>
+        @robot.logger.info "Discobot: Logged in as User: #{@discord.user.username}##{@discord.user.discriminator}"
+        @robot.name = @discord.user.username.toLowerCase()
+
+        @emit "connected"
+
+    onmessage: (message) =>
+        return if message.author.id == @discord.user.id # skip messages from the bot itself
+
+        user = @robot.brain.userForId message.author.id
+
+        user.name = message.author.username
+        user.discriminator = message.author.discriminator
+        user.room = message.channel.id
+
+        @rooms[user.room] ?= message.channel
+
+        text = message.content
+
+        @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
+        @robot.receive new TextMessage(user, text, message.id)
+
     ondisconnected: =>
         @robot.logger.info "Discobot: Bot lost connection to the server, will auto reconnect soon..."
 
 exports.use = (robot) ->
-new DiscordAdapter robot
+    new DiscordAdapter robot
