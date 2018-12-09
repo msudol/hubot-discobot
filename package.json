@@ -1,6 +1,6 @@
 {
     "name": "hubot-discord-adapter",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Hubot Adapter for discord.js",
     "main": "src/discord.coffee",
     "scripts": {
