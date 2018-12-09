@@ -1,5 +1,5 @@
 {
-    "name": "discord-hubot-adapter",
+    "name": "hubot-discord-adapter",
     "version": "0.0.2",
     "description": "Hubot Adapter for discord.js",
     "main": "src/discord.js",
