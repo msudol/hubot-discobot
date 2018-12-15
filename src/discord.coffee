@@ -49,7 +49,8 @@ class DiscordAdapter extends Adapter
   onready: =>
     @robot.logger.info "Discobot: Logged in as User: #{@discord.user.username}##{@discord.user.discriminator}"
     @robot.name = @discord.user.username.toLowerCase()
-
+    robot = @robot
+    
     @emit "connected"
     # post-connection actions go here
     
