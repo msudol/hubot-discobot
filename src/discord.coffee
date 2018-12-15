@@ -58,8 +58,8 @@ class DiscordAdapter extends Adapter
     
     # set activity
     @discord.user.setActivity(@activity, {type: 'PLAYING'})
-        .then (msg) ->
-          robot.logger.debug "SUCCESS! Activity has been set"
+        .then (presence) ->
+          robot.logger.debug "Activity set to #{presence.game ? presence.game.name : 'none'}"
           #callback null, true
         .catch (err) ->
           robot.logger.error "Error while trying to set activity"
@@ -82,12 +82,13 @@ class DiscordAdapter extends Adapter
     @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
     @robot.receive new TextMessage(user, text, message.id)
     
+  # sendMessage deprecated, use send now: https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
   messageChannel: (channelId, message, callback) ->
     robot = @robot
     sendMessage = (channel, message, callback) ->
       callback ?= (err, success) -> {}
 
-      channel.sendMessage(message)
+      channel.send(message)
         .then (msg) ->
           robot.logger.debug "SUCCESS! Send message to channel #{channel.id}"
           callback null, true
