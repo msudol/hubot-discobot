@@ -33,7 +33,7 @@ class DiscordAdapter extends Adapter
     
     @discord = new Discord.Client autoReconnect: @autoConnect
 
-    # the ready event is vital, it means that only after this your bot will reach to info from discord
+    # after ready your bot will respond to info from discord
     @discord.on "ready", @.onready
     # the basic on message event
     @discord.on "message", @.onmessage
@@ -59,15 +59,16 @@ class DiscordAdapter extends Adapter
     # set activity
     @discord.user.setActivity(@activity, {type: 'PLAYING'})
         .then (presence) ->
-          robot.logger.debug "Activity set to #{presence.game ? presence.game.name : 'none'}"
+          robot.logger.debug "Activity set to #{presence.game}"
           #callback null, true
         .catch (err) ->
           robot.logger.error "Error while trying to set activity"
           robot.logger.error err
-          #callback err, false    
+          #callback err, false
 
   onmessage: (message) =>
-    return if message.author.id == @discord.user.id # skip messages from the bot itself
+    return if message.author.id == @discord.user.id
+    # skip messages from the bot itself
 
     user = @robot.brain.userForId message.author.id
 
@@ -82,7 +83,8 @@ class DiscordAdapter extends Adapter
     @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
     @robot.receive new TextMessage(user, text, message.id)
     
-  # sendMessage deprecated, use send now: https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
+  # sendMessage deprecated, use send now
+  # https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
   messageChannel: (channelId, message, callback) ->
     robot = @robot
     sendMessage = (channel, message, callback) ->
@@ -97,7 +99,7 @@ class DiscordAdapter extends Adapter
           robot.logger.error err
           callback err, false
 
-    @robot.logger.debug "Discobot: Try to send message: \"#{message}\" to channel: #{channelId}"
+    @robot.logger.debug "Discobot: message: \"#{message}\" to channel: #{channelId}"
 
     if @rooms[channelId]? # room is already known and cached
       sendMessage @rooms[channelId], message, callback
