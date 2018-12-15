@@ -25,6 +25,7 @@ class DiscordAdapter extends Adapter
   run: ->
     @token = process.env.HUBOT_DISCORD_TOKEN
     @autoConnect = process.env.HUBOT_DISCORD_AUTOCONNECT
+    @activity = process.env.HUBOT_DISCORD_ACTIVITY || 'World Domination'
 
     if not @token?
       @robot.logger.error "Discobot Error: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
@@ -50,6 +51,20 @@ class DiscordAdapter extends Adapter
     @robot.name = @discord.user.username.toLowerCase()
 
     @emit "connected"
+    # post-connection actions go here
+    
+    # get all the rooms
+    @rooms[channel.id] = channel for channel in @discord.channels
+    
+    # set activity
+    @discord.user.setActivity(@activity, {type: 'PLAYING'})
+        .then (msg) ->
+          robot.logger.debug "SUCCESS! Activity has been set"
+          #callback null, true
+        .catch (err) ->
+          robot.logger.error "Error while trying to set activity"
+          robot.logger.error err
+          #callback err, false    
 
   onmessage: (message) =>
     return if message.author.id == @discord.user.id # skip messages from the bot itself

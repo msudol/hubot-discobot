@@ -28,7 +28,8 @@ You may also use a .json file with the env object set.
 
     "env": {
         "HUBOT_DISCORD_TOKEN": "your token here",
-        "HUBOT_DISCORD_AUTOCONNECT": false
+        "HUBOT_DISCORD_AUTOCONNECT": false,
+        "HUBOT_DISCORD_ACTIVITY": "Super Bot Bash"
     }
  
 
