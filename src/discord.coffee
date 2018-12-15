@@ -32,9 +32,16 @@ class DiscordAdapter extends Adapter
     
     @discord = new Discord.Client autoReconnect: @autoConnect
 
+    # the ready event is vital, it means that only after this your bot will reach to info from discord
     @discord.on "ready", @.onready
+    # the basic on message event
     @discord.on "message", @.onmessage
-    @discord.on "disconnected", @.ondisconnected
+    # this is basically server join, TODO
+    # @discord.on "guildMemberAdd", @.onguildmemberadd
+    # When the bot is reconnecting
+    # @discord.on "reconnecting", @.onreconnecting
+    # When the bot gets disconnected from the server
+    @discord.on "disconnect", @.ondisconnect
 
     @discord.login @token
 
@@ -95,7 +102,7 @@ class DiscordAdapter extends Adapter
     for message in messages
       @messageChannel envelope.room, "<@#{envelope.user.id}> #{message}"
 
-  ondisconnected: =>
+  ondisconnect: =>
     @robot.logger.info "Discobot: lost connection to the server..."
 
 exports.use = (robot) ->
