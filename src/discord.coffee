@@ -33,7 +33,8 @@ class DiscordAdapter extends Adapter
     
     @discord = new Discord.Client autoReconnect: @autoConnect
 
-    # will this extend robot with a class called client?
+    # will this extend robot with a class called client? Yes it worked!
+    # basically any of the discord API is now available to scripts
     @robot.client = @discord;
     
     # after ready your bot will respond to info from discord
