@@ -1,28 +1,42 @@
 {
-    "name": "hubot-discord-adapter",
-    "version": "0.1.1",
-    "description": "Hubot Adapter for discord.js",
-    "main": "src/discord.coffee",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "dependencies": {
-        "discord.js": "11.4.x",
-        "parent-require": "^1.0.0"
-    },
-    "peerDependencies": {
-        "hubot": ">=2.19.0"
-    },
-    "devDependencies": {
-        "coffee-script": "^1.12.6"
-    },
-    "engines": {
-        "node": "^6.5.x"
-    },
-    "repository": {
+  "name": "hubot-discord-adapter",
+  "version": "0.1.1",
+  "description": "Hubot Adapter for discord.js",
+  "main": "src/discord.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "discord.js": "11.4.x",
+    "parent-require": "^1.0.0"
+  },
+  "peerDependencies": {
+    "hubot": ">=2.19.0"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.12.6"
+  },
+  "engines": {
+    "node": "^6.5.x"
+  },
+  "repository": {
     "type": "git",
-        "url": "https://github.com/msudol/discord-hubot-adapter"
-    },
-    "author": "Matt Sudol",
-    "license": "GPLV3"
+    "url": "git+https://github.com/msudol/discord-hubot-adapter.git"
+  },
+  "author": "Matt Sudol",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/msudol/discord-hubot-adapter/issues"
+  },
+  "homepage": "https://github.com/msudol/discord-hubot-adapter#readme",
+  "directories": {
+    "example": "examples"
+  },
+  "keywords": [
+    "hubot",
+    "discord",
+    "discord.js",
+    "bot",
+    "adapter"
+  ]
 }
