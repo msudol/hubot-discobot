@@ -18,7 +18,7 @@ More coming soon.
 
 Setup is easy, just use NPM to install this adapter from github (and eventually from NPM):
 
-    npm install https://github.com/msudol/hubot-discobot.git 
+    npm install hubot-discobot
     
 Then run hubot with the adapter flag 
 
