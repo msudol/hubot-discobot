@@ -2,7 +2,7 @@
 //   Scripts that interact with hubot-discord-adapter and discord.js via robot.client
 //
 // Dependencies:
-//   hubot-discord-adapter
+//   hubot-discobot
 //
 // Configuration:
 //   HUBOT_DISCORD_ACTIVITY - Status message to set for "currently playing game"
