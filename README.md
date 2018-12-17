@@ -1,4 +1,4 @@
-# hubot-discord-adapater
+# hubot-discobot
 
 A hubot adapter for the Discord.js API
 
@@ -18,11 +18,11 @@ More coming soon.
 
 Setup is easy, just use NPM to install this adapter from github (and eventually from NPM):
 
-    npm install https://github.com/msudol/hubot-discord-adapter.git 
+    npm install https://github.com/msudol/hubot-discobot.git 
     
 Then run hubot with the adapter flag 
 
-    ./bin/hubot -a discord-adapter
+    ./bin/hubot -a discobot
     
 You may also use a .json file with the env object set.
 

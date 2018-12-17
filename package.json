@@ -1,5 +1,5 @@
 {
-  "name": "hubot-discord-adapter",
+  "name": "hubot-discobot",
   "version": "0.1.1",
   "description": "Hubot Adapter for discord.js",
   "main": "src/discord.coffee",
@@ -21,14 +21,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/msudol/discord-hubot-adapter.git"
+    "url": "git+https://github.com/msudol/hubot-discobot.git"
   },
   "author": "Matt Sudol",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/msudol/discord-hubot-adapter/issues"
+    "url": "https://github.com/msudol/hubot-discobot/issues"
   },
-  "homepage": "https://github.com/msudol/discord-hubot-adapter#readme",
+  "homepage": "https://github.com/msudol/hubot-discobot#readme",
   "directories": {
     "example": "examples"
   },
