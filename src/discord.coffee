@@ -35,7 +35,7 @@ class DiscordAdapter extends Adapter
 
     # will this extend robot with a class called client? Yes it worked!
     # basically any of the discord API is now available to scripts
-    @robot.client = @discord;
+    @robot.client = @discord
     
     # after ready your bot will respond to info from discord
     @discord.on "ready", @.onready
