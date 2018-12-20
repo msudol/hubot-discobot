@@ -6,6 +6,10 @@ A hubot adapter for the Discord.js API
 
 Originally based on disbot - https://github.com/atomicptr/disbot 
 
+For an example of a complete implementation of Hubot and Hubot-discobot, check out TremBot: https://github.com/Pwn9/TremBot 
+
+See TremBot in action on the Pwn9 Discord Channel, get your server invite at http://discord.pwn9.com
+
 ### Changes & TODO
 
 * Upgrade to latest version of discord.js - DONE (11.4.x)
