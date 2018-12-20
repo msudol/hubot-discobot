@@ -16,7 +16,9 @@ More coming soon.
 
 ## Setup
 
-Setup is easy, just use NPM to install this adapter from github (and eventually from NPM):
+First, you should have hubot installed and understand that the purpose of the adapter (like this one) is to connect a hubot to an endpoint, whether that be IRC, Slack, Campfire, or in our case: Discord! Learn more at https://hubot.github.com/docs/
+
+After that, setup is easy, just use NPM to install this adapter from github (and eventually from NPM):
 
     npm install hubot-discobot
     
