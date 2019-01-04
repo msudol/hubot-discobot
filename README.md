@@ -10,13 +10,13 @@ For an example of a complete implementation of Hubot and Hubot-discobot, check o
 
 See TremBot in action on the Pwn9 Discord Channel, get your server invite at http://discord.pwn9.com
 
-### Changes & TODO
+### Features
 
-* Upgrade to latest version of discord.js - DONE (11.4.x)
-* Create more configurable bot instance - DONE (see ENV in setup below)
-* Extend more discord features into the adapter - DONE (The entire instance of discord is extended to hubot scripts via robot.client where client = discord client)
+* Discord.js version ^11.4.x
+* More configurable hubot / discord bot instance (see ENV in setup below)
+* Extend more Discord features into the adapter (The entire instance of Discord.js is extended to hubot scripts via robot.client where client = discord client)
 
-More coming soon.
+More coming soon...
 
 ## Setup
 
