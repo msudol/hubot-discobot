@@ -1,6 +1,6 @@
 # hubot-discobot
 
-A hubot adapter for the Discord.js API
+A Hubot adapter for Discord, using the Discord.js API
 
 ## Information
 
