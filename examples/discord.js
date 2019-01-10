@@ -11,7 +11,7 @@
 //   hubot setGame <password> <activity> - Sets the discord activity
 //
 // Author:
-//   Matt Sudol
+//   msudol
 
 //Settings
 var passcode = process.env.HUBOT_DISCORD_PASSWORD;

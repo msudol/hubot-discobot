@@ -7,7 +7,6 @@
 #
 # Configuration:
 #   HUBOT_DISCORD_TOKEN - authentication token for bot
-#   HUBOT_DISCORD_AUTOCONNECT - true/false to have autoReconnect enabled
 
 try
   {Robot, Adapter, TextMessage} = require "hubot"
@@ -24,14 +23,15 @@ class DiscordAdapter extends Adapter
 
   run: ->
     @token = process.env.HUBOT_DISCORD_TOKEN
-    @autoConnect = process.env.HUBOT_DISCORD_AUTOCONNECT
     @activity = process.env.HUBOT_DISCORD_ACTIVITY || 'World Domination'
 
     if not @token?
       @robot.logger.error "Discobot Error: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
       return
     
-    @discord = new Discord.Client autoReconnect: @autoConnect
+    @robot.logger
+    
+    @discord = new Discord.Client()
 
     # will this extend robot with a class called client? Yes it worked!
     # basically any of the discord API is now available to scripts
@@ -44,7 +44,7 @@ class DiscordAdapter extends Adapter
     # this is basically server join, TODO
     # @discord.on "guildMemberAdd", @.onguildmemberadd
     # When the bot is reconnecting
-    # @discord.on "reconnecting", @.onreconnecting
+    @discord.on "reconnecting", @.onreconnecting
     # When the bot gets disconnected from the server
     @discord.on "disconnect", @.ondisconnect
 
@@ -126,7 +126,10 @@ class DiscordAdapter extends Adapter
       @messageChannel envelope.room, "<@#{envelope.user.id}> #{message}"
 
   ondisconnect: =>
-    @robot.logger.info "Discobot: lost connection to the server..."
+    @robot.logger.info "Discobot: Lost connection to the server..."
+    
+  onreconnecting: =>
+    @robot.logger.info "Discobot: Attempting to reconnect to server..."    
 
 exports.use = (robot) ->
   new DiscordAdapter robot
