@@ -33,20 +33,23 @@ class DiscordAdapter extends Adapter
     
     @discord = new Discord.Client()
 
-    # will this extend robot with a class called client? Yes it worked!
-    # basically any of the discord API is now available to scripts
+    # Extend discord.js API to hubot scripts
     @robot.client = @discord
     
     # after ready your bot will respond to info from discord
     @discord.on "ready", @.onready
     # the basic on message event
     @discord.on "message", @.onmessage
-    # this is basically server join, TODO
-    # @discord.on "guildMemberAdd", @.onguildmemberadd
     # When the bot is reconnecting
     @discord.on "reconnecting", @.onreconnecting
     # When the bot gets disconnected from the server
     @discord.on "disconnect", @.ondisconnect
+    # Emitted whenever the client's WebSocket encounters a connection error.
+    @discord.on "error", @.onerror
+    # Emitted for general debugging information.
+    @discord.on "debug", @.ondebug  
+    # Emitted for general warnings.
+    @discord.on "warn", @.onwarn      
 
     @discord.login @token
 
@@ -64,12 +67,10 @@ class DiscordAdapter extends Adapter
     # set activity
     @discord.user.setActivity(@activity, {type: 'PLAYING'})
         .then (presence) ->
-          robot.logger.debug "Activity set to #{presence.game}"
-          #callback null, true
+          robot.logger.info "Discobot: Activity set to #{presence.game}"
         .catch (err) ->
-          robot.logger.error "Error while trying to set activity"
+          robot.logger.error "Discobot: Error while trying to set activity"
           robot.logger.error err
-          #callback err, false
 
   onmessage: (message) =>
     return if message.author.id == @discord.user.id
@@ -87,20 +88,19 @@ class DiscordAdapter extends Adapter
 
     @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
     @robot.receive new TextMessage(user, text, message.id)
-    
-  # sendMessage deprecated, use send now
-  # https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
+      
   messageChannel: (channelId, message, callback) ->
     robot = @robot
     sendMessage = (channel, message, callback) ->
       callback ?= (err, success) -> {}
 
+      # https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
       channel.send(message)
         .then (msg) ->
-          robot.logger.debug "SUCCESS! Send message to channel #{channel.id}"
+          robot.logger.debug "Discobot: Send message to channel #{channel.id}"
           callback null, true
         .catch (err) ->
-          robot.logger.error "Error while trying to send message #{message}"
+          robot.logger.error "Discobot: Error while trying to send message #{message}"
           robot.logger.error err
           callback err, false
 
@@ -114,8 +114,9 @@ class DiscordAdapter extends Adapter
       if channels.first()?
         sendMessage channels.first(), message, callback
       else
-        @robot.logger.error "Unknown channel id: #{channelId}"
-        callback {message: "Unknown channel id: #{channelId}"}, false
+        @robot.logger.error "Discobot: Unknown channel id: #{channelId}"
+        # this seems to throw a type error when the channel is unknown
+        #callback {message: "Unknown channel id: #{channelId}"}, false
 
   send: (envelope, messages...) ->
     for message in messages
@@ -125,11 +126,20 @@ class DiscordAdapter extends Adapter
     for message in messages
       @messageChannel envelope.room, "<@#{envelope.user.id}> #{message}"
 
-  ondisconnect: =>
+  ondisconnect: (event) =>
     @robot.logger.info "Discobot: Lost connection to the server..."
     
   onreconnecting: =>
-    @robot.logger.info "Discobot: Attempting to reconnect to server..."    
+    @robot.logger.info "Discobot: Attempting to reconnect to server..."  
+    
+  onerror: (err) =>
+    @robot.logger.error err 
+    
+  ondebug: (message) =>
+    @robot.logger.debug message  
+
+  onwarn: (message) =>
+    @robot.logger.info message  
 
 exports.use = (robot) ->
   new DiscordAdapter robot
