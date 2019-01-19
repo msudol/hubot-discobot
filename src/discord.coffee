@@ -26,7 +26,7 @@ class DiscordAdapter extends Adapter
     @activity = process.env.HUBOT_DISCORD_ACTIVITY || 'World Domination'
 
     if not @token?
-      @robot.logger.error "Discobot Error: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
+      @robot.logger.error "Discobot: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
       return
     
     @robot.logger
@@ -47,14 +47,14 @@ class DiscordAdapter extends Adapter
     # Emitted whenever the client's WebSocket encounters a connection error.
     @discord.on "error", @.onerror
     # Emitted for general debugging information.
-    @discord.on "debug", @.ondebug  
+    @discord.on "debug", @.ondebug
     # Emitted for general warnings.
-    @discord.on "warn", @.onwarn      
+    @discord.on "warn", @.onwarn
 
     @discord.login @token
 
   onready: =>
-    @robot.logger.info "Discobot: Logged in as User: #{@discord.user.username}##{@discord.user.discriminator}"
+    @robot.logger.info "Discobot: Logged in as: #{@discord.user.username}##{@discord.user.discriminator}"
     @robot.name = @discord.user.username.toLowerCase()
     robot = @robot
     
@@ -94,17 +94,17 @@ class DiscordAdapter extends Adapter
     sendMessage = (channel, message, callback) ->
       callback ?= (err, success) -> {}
 
-      # https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
+      # discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
       channel.send(message)
         .then (msg) ->
           robot.logger.debug "Discobot: Send message to channel #{channel.id}"
           callback null, true
         .catch (err) ->
-          robot.logger.error "Discobot: Error while trying to send message #{message}"
+          robot.logger.error "Discobot: Error while trying to send: #{message}"
           robot.logger.error err
           callback err, false
 
-    @robot.logger.debug "Discobot: message: \"#{message}\" to channel: #{channelId}"
+    @robot.logger.debug "Discobot: \"#{message}\" to channel: #{channelId}"
 
     if @rooms[channelId]? # room is already known and cached
       sendMessage @rooms[channelId], message, callback
@@ -130,16 +130,16 @@ class DiscordAdapter extends Adapter
     @robot.logger.info "Discobot: Lost connection to the server..."
     
   onreconnecting: =>
-    @robot.logger.info "Discobot: Attempting to reconnect to server..."  
+    @robot.logger.info "Discobot: Attempting to reconnect to server..."
     
   onerror: (err) =>
-    @robot.logger.error err 
+    @robot.logger.error err
     
   ondebug: (message) =>
-    @robot.logger.debug message  
+    @robot.logger.debug message
 
   onwarn: (message) =>
-    @robot.logger.info message  
+    @robot.logger.info message
 
 exports.use = (robot) ->
   new DiscordAdapter robot
