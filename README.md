@@ -1,12 +1,12 @@
 # hubot-discobot
 
-A Hubot adapter for Discord, using the Discord.js API
+A Hubot adapter for Discord, using the Discord.js API supporting the latest versions of Discord.js and Hubot. Make your own highly customizable Discord Bot.
 
 ## Information
 
 Originally based on disbot - https://github.com/atomicptr/disbot 
 
-For an example of a complete implementation of Hubot and Hubot-discobot, check out TremBot: https://github.com/Pwn9/TremBot 
+For an example of a working, complete implementation of Hubot and Hubot-discobot adapter, check out TremBot: https://github.com/Pwn9/TremBot 
 
 See TremBot in action on the Pwn9 Discord Channel, get your server invite at http://discord.pwn9.com
 
