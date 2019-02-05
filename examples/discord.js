@@ -24,7 +24,7 @@ module.exports = function(robot) {
     // when something is done repeatedly, make a function out of it
     var parseCmd = function(msg) {
 		var opts = msg.match[1];
-        var options = opts.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g);  
+        var options = opts.match(/(?=\S)[^"\s]*(?:"[^\\"]*(?:\\[\s\S][^\\"]*)*"[^"\s]*)*/g);
         
         for (var i = 0; i < options.length; i++) {
             if (typeof options[i] === 'string') {
@@ -45,7 +45,7 @@ module.exports = function(robot) {
         var value = options.slice(1).join(" ");
         
         // check for command usage format
-	    if (options.length >= 2){
+	    if (options.length >= 2) {
             // check password
             if (pwd === passcode) {
                 // set the currently playing game
