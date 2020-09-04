@@ -6,13 +6,16 @@ A Hubot adapter for Discord, using the Discord.js API supporting the latest vers
 
 Originally based on disbot - https://github.com/atomicptr/disbot 
 
+Current Discord.js version: 12.3.1
+Required Node.js version: >= 12.0.0
+
 For an example of a working, complete implementation of Hubot and Hubot-discobot adapter, check out TremBot: https://github.com/Pwn9/TremBot 
 
 See TremBot in action on the Pwn9 Discord Channel, get your server invite at http://discord.pwn9.com
 
 ### Features
 
-* Discord.js version ^11.4.x
+* Discord.js version ^12.3.x
 * More configurable hubot / discord bot instance (see ENV in setup below)
 * Extend more Discord features into the adapter (The entire instance of Discord.js is extended to hubot scripts via robot.client where client = discord client)
 
