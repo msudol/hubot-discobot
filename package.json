@@ -1,6 +1,6 @@
 {
   "name": "hubot-discobot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Hubot Adapter for discord.js",
   "main": "src/discord.coffee",
   "scripts": {
