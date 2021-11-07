@@ -109,10 +109,10 @@ class DiscordAdapter extends Adapter
     if @rooms[channelId]? # room is already known and cached
       sendMessage @rooms[channelId], message, callback
     else # unknown room, try to find it 
-      channels = @discord.channels.fetch (channel) -> channel.id == channelId
+      channel = @discord.channels.fetch (channel) -> channel.id == channelId
 
-      if channels.first()?
-        sendMessage channels.first(), message, callback
+      if channel
+        sendMessage channel, message, callback
       else
         @robot.logger.error "Discobot: Unknown channel id: #{channelId}"
         # this seems to throw a type error when the channel is unknown
