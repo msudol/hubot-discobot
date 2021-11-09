@@ -11,7 +11,7 @@
     "parent-require": "^1.0.0"
   },
   "peerDependencies": {
-    "hubot": ">=2.19.0"
+    "hubot": "^3.0.0"
   },
   "devDependencies": {
     "coffee-script": "^1.12.6"
@@ -34,6 +34,7 @@
   },
   "keywords": [
     "hubot",
+    "hubot-scripts",
     "discord",
     "discord.js",
     "bot",

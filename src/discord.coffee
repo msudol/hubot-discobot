@@ -94,6 +94,9 @@ class DiscordAdapter extends Adapter
     sendMessage = (channel, message, callback) ->
       callback ?= (err, success) -> {}
 
+      if message.length >= 2000
+        robot.logger.error 'Discobot: Attempted to send overlength message.'
+
       # discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
       channel.send(message)
         .then (msg) ->
