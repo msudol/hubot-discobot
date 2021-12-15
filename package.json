@@ -1,23 +1,23 @@
 {
   "name": "hubot-discobot",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Hubot Adapter for discord.js",
   "main": "src/discord.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "discord.js": "12.3.x",
+    "discord.js": "^13.0.0",
     "parent-require": "^1.0.0"
   },
   "peerDependencies": {
     "hubot": "^3.0.0"
   },
   "devDependencies": {
-    "coffee-script": "^1.12.6"
+    "coffeescript": ">=1.12.7"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=16.6.0"
   },
   "repository": {
     "type": "git",
