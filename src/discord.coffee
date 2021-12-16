@@ -7,6 +7,8 @@
 #
 # Configuration:
 #   HUBOT_DISCORD_TOKEN - authentication token for bot
+#   HUBOT_DISCORD_ACTIVITY - Status message to set for "currently playing game"
+#   HUBOT_DISCORD_ACTIVITY_TYPE - One of PLAYING,STREAMING,LISTENING,WATCHING,COMPETING
 
 try
   {Robot, Adapter, TextMessage} = require "hubot"
@@ -24,6 +26,7 @@ class DiscordAdapter extends Adapter
   run: ->
     @token = process.env.HUBOT_DISCORD_TOKEN
     @activity = process.env.HUBOT_DISCORD_ACTIVITY || 'World Domination'
+    @activityType = process.env.HUBOT_DISCORD_ACTIVITY_TYPE || 'PLAYING'
 
     if not @token?
       @robot.logger.error "Discobot: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
@@ -65,7 +68,8 @@ class DiscordAdapter extends Adapter
     @rooms[channel.id] = channel for channel in @discord.channels
     
     # set activity
-    @discord.user.setActivity(@activity, {type: 'PLAYING'})
+    # types: PLAYING,STREAMING,LISTENING,WATCHING,COMPETING - https://discord.js.org/#/docs/main/stable/typedef/ActivityType
+    @discord.user.setActivity(@activity, {type: @activityType})
         .then (presence) ->
           robot.logger.info "Discobot: Activity set to #{presence.game}"
         .catch (err) ->
@@ -93,9 +97,6 @@ class DiscordAdapter extends Adapter
     robot = @robot
     sendMessage = (channel, message, callback) ->
       callback ?= (err, success) -> {}
-
-      if message.length >= 2000
-        robot.logger.error 'Discobot: Attempted to send overlength message.'
 
       # discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
       channel.send(message)

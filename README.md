@@ -6,8 +6,8 @@ A Hubot adapter for Discord, using the Discord.js API supporting the latest vers
 
 Originally based on disbot - https://github.com/atomicptr/disbot 
 
-Current Discord.js version: 12.3.1
-Required Node.js version: >= 12.0.0
+Current Discord.js version: 13.3.1
+Required Node.js version: >= 16.6.0
 
 For an example of a working, complete implementation of Hubot and Hubot-discobot adapter, check out TremBot: https://github.com/Pwn9/TremBot 
 
@@ -38,11 +38,11 @@ You may also use a .json file with the env object set.
     "env": {
         "HUBOT_DISCORD_TOKEN": "your token here",
         "HUBOT_DISCORD_ACTIVITY": "Super Bot Bash"
+        "HUBOT_DISCORD_ACTIVITY_TYPE": "PLAYING"
         "HUBOT_DISCORD_PASSWORD": "supersecret"
     }
- 
 
-Remember you need to have an environment variable called ``HUBOT_DISCORD_TOKEN`` with your Bot token which you can get here: https://discordapp.com/developers/applications/me
+IMPORTANT: you need to have an environment variable called ``HUBOT_DISCORD_TOKEN`` with your Bot token which you can get here: https://discordapp.com/developers/applications/me
 
 ## Creating scripts for your Hubot instance, with discord adpater API
 
@@ -51,4 +51,8 @@ You can access the discord client via robot.client. See the discord.js docs for 
 
 ### Examples
 
-See the examples folder for a script in javascript that can set the bots current activity.
+Using the environment variables for your bot, you can set a custom status. Documentation available: https://discord.js.org/#/docs/main/stable/typedef/ActivityOptions
+
+Activity type can be one of:  PLAYING, STREAMING, LISTENING, WATCHING, COMPETING
+
+For additional scripting examples, see the examples folder for a script in javascript that can set the bots current activity.

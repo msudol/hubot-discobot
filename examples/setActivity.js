@@ -1,20 +1,22 @@
 // Description:
-//   Scripts that interact with hubot-discord-adapter and discord.js via robot.client
+//   Example scripts that interacts with hubot-discobot adapter and discord.js via robot.client
 //
 // Dependencies:
 //   hubot-discobot
 //
 // Configuration:
 //   HUBOT_DISCORD_ACTIVITY - Status message to set for "currently playing game"
+//   HUBOT_DISCORD_ACTIVITY_TYPE - One of PLAYING,STREAMING,LISTENING,WATCHING,COMPETING
 //   HUBOT_DISCORD_PASSWORD - Set a password to only allow users who know it to make changes
 // Commands:
-//   hubot setGame <password> <activity> - Sets the discord activity
+//   hubot setGame <password> <activityType> <activity> - Sets the discord activity
 //
 // Author:
 //   msudol
 
 //Settings
 var passcode = process.env.HUBOT_DISCORD_PASSWORD;
+var activities = ["PLAYING","STREAMING","LISTENING","WATCHING","COMPETING"];
 
 module.exports = function(robot) {
     
@@ -42,23 +44,30 @@ module.exports = function(robot) {
         
         var options = parseCmd(msg);
         var pwd = options[0];
-        var value = options.slice(1).join(" ");
+        var activityType = options[1];
+        var value = options.slice(2).join(" ");
         
         // check for command usage format
-	    if (options.length >= 2) {
+	    if (options.length >= 3) {
             // check password
             if (pwd === passcode) {
-                // set the currently playing game
-                robot.client.user.setActivity(value, {type: 'PLAYING'})
-                    .then((presence) => {robot.logger.debug("Activity set to " + presence.game)})
-                    .catch((error) => {robot.logger.error(error)});             
+                // check activityType 
+                if (activities.includes(activityType)) {
+                    // set the currently playing game
+                    robot.client.user.setActivity(value, {type: activityType})
+                        .then((presence) => {robot.logger.debug("Activity set to " + presence.game)})
+                        .catch((error) => {robot.logger.error(error)});  
+                } else {
+                    return msg.reply("Bad activity type, use one of " + activities.toString());
+                }
+           
             }
             else {
-                return msg.reply("Invalid password: " + pwd + " - usage: setGame [password] [activity value]");
+                return msg.reply("Invalid password: " + pwd + " - usage: setGame [password] [activity type] [activity value]");
             }  
 	    }
 	    else {
-            return msg.reply("Bad command format, use: setGame [password] [activity value]");
+            return msg.reply("Bad command format, use: setGame [password] [activity type] [activity value]");
 	    }
     }); 
     
