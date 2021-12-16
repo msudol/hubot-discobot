@@ -71,7 +71,7 @@ class DiscordAdapter extends Adapter
     # types: PLAYING,STREAMING,LISTENING,WATCHING,COMPETING - https://discord.js.org/#/docs/main/stable/typedef/ActivityType
     @discord.user.setActivity(@activity, {type: @activityType})
         .then (presence) ->
-          robot.logger.info "Discobot: Activity set to #{activityType} #{activity}"
+          robot.logger.info "Discobot: Activity set to #{@activityType} #{@activity}"
         .catch (err) ->
           robot.logger.error "Discobot: Error while trying to set activity"
           robot.logger.error err
