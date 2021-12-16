@@ -5,9 +5,10 @@
 //   hubot-discobot
 //
 // Configuration:
-//   HUBOT_DISCORD_ACTIVITY - Status message to set for "currently playing game"
+//   HUBOT_DISCORD_ACTIVITY - Status message to set for current activity
 //   HUBOT_DISCORD_ACTIVITY_TYPE - One of PLAYING,STREAMING,LISTENING,WATCHING,COMPETING
 //   HUBOT_DISCORD_PASSWORD - Set a password to only allow users who know it to make changes
+//
 // Commands:
 //   hubot setGame <password> <activityType> <activity> - Sets the discord activity
 //
@@ -55,7 +56,7 @@ module.exports = function(robot) {
                 if (activities.includes(activityType)) {
                     // set the currently playing game
                     robot.client.user.setActivity(value, {type: activityType})
-                        .then((presence) => {robot.logger.debug("Activity set to " + presence.game)})
+                        .then((presence) => {robot.logger.debug("Activity set to " + activityType + " " + value)})
                         .catch((error) => {robot.logger.error(error)});  
                 } else {
                     return msg.reply("Bad activity type, use one of " + activities.toString());

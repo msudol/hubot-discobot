@@ -7,7 +7,7 @@
 #
 # Configuration:
 #   HUBOT_DISCORD_TOKEN - authentication token for bot
-#   HUBOT_DISCORD_ACTIVITY - Status message to set for "currently playing game"
+#   HUBOT_DISCORD_ACTIVITY - Status message to set for current activity
 #   HUBOT_DISCORD_ACTIVITY_TYPE - One of PLAYING,STREAMING,LISTENING,WATCHING,COMPETING
 
 try
@@ -71,7 +71,7 @@ class DiscordAdapter extends Adapter
     # types: PLAYING,STREAMING,LISTENING,WATCHING,COMPETING - https://discord.js.org/#/docs/main/stable/typedef/ActivityType
     @discord.user.setActivity(@activity, {type: @activityType})
         .then (presence) ->
-          robot.logger.info "Discobot: Activity set to #{presence.game}"
+          robot.logger.info "Discobot: Activity set to #{activityType} #{activity}"
         .catch (err) ->
           robot.logger.error "Discobot: Error while trying to set activity"
           robot.logger.error err
