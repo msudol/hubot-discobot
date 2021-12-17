@@ -65,7 +65,7 @@ class DiscordAdapter extends Adapter
     # post-connection actions go here
     
     # get all the rooms
-    @rooms[channel.id] = channel for channel in @discord.channels
+    @rooms = @discord.channels.cache
     
     # set activity
     # types: PLAYING,STREAMING,LISTENING,WATCHING,COMPETING - https://discord.js.org/#/docs/main/stable/typedef/ActivityType
@@ -97,11 +97,9 @@ class DiscordAdapter extends Adapter
     robot = @robot
     sendMessage = (channel, message, callback) ->
       callback ?= (err, success) -> {}
-
       # discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
       channel.send(message)
         .then (msg) ->
-          robot.logger.debug "Discobot: Send message to channel #{channel.id}"
           callback null, true
         .catch (err) ->
           robot.logger.error "Discobot: Error while trying to send: #{message}"
@@ -111,16 +109,11 @@ class DiscordAdapter extends Adapter
     @robot.logger.debug "Discobot: \"#{message}\" to channel: #{channelId}"
 
     if @rooms[channelId]? # room is already known and cached
-      sendMessage @rooms[channelId], message, callback
-    else # unknown room, try to find it 
-      channel = @discord.channels.fetch (channel) -> channel.id == channelId
-
-      if channel
+      sendMessage @rooms[channelId], message, callback  
+    else # unknown room 
+      @discord.channels.fetch(channelId).then((channel) ->
         sendMessage channel, message, callback
-      else
-        @robot.logger.error "Discobot: Unknown channel id: #{channelId}"
-        # this seems to throw a type error when the channel is unknown
-        #callback {message: "Unknown channel id: #{channelId}"}, false
+      ).catch console.error 
 
   send: (envelope, messages...) ->
     for message in messages
