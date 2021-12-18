@@ -1,4 +1,3 @@
-
 # Description:
 #   Adapter for Hubot to communicate on Discord
 #
@@ -92,9 +91,11 @@ class DiscordAdapter extends Adapter
 
     @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
     @robot.receive new TextMessage(user, text, message.id)
-      
+
+  # send a message to a channel    
   messageChannel: (channelId, message, callback) ->
     robot = @robot
+    # declare sendmessage function to channel type: channel, and message type: message object
     sendMessage = (channel, message, callback) ->
       callback ?= (err, success) -> {}
       # discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
@@ -110,7 +111,7 @@ class DiscordAdapter extends Adapter
 
     if @rooms[channelId]? # room is already known and cached
       sendMessage @rooms[channelId], message, callback  
-    else # unknown room 
+    else # unknown room - try to find and send
       @discord.channels.fetch(channelId).then((channel) ->
         sendMessage channel, message, callback
       ).catch console.error 
