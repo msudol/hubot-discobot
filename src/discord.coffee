@@ -16,6 +16,10 @@ catch
   {Robot, Adapter, TextMessage} = prequire "hubot"
 
 Discord = require "discord.js"
+Intents = require "discord.js"
+
+myIntents = new Intents
+myIntents.add Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILDS, Intents.FLAGS.DIRECT_MESSAGES
 
 class DiscordAdapter extends Adapter
   constructor: (robot) ->
@@ -33,7 +37,7 @@ class DiscordAdapter extends Adapter
     
     @robot.logger
     
-    @discord = new Discord.Client()
+    @discord = new Discord.Client({ intents: myIntents })
 
     # Extend discord.js API to hubot scripts
     @robot.client = @discord
