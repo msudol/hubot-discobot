@@ -16,7 +16,7 @@ catch
   {Robot, Adapter, TextMessage} = prequire "hubot"
 
 Discord = require "discord.js"
-Intents = require "discord.js"
+Intents = Discord.Intents
 
 myIntents = new Intents
 myIntents.add Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILDS, Intents.FLAGS.DIRECT_MESSAGES
