@@ -15,11 +15,10 @@ catch
   prequire = require "parent-require"
   {Robot, Adapter, TextMessage} = prequire "hubot"
 
+# load discord.js
 Discord = require "discord.js"
+# invoke the intents structure
 Intents = Discord.Intents
-
-myIntents = new Intents
-myIntents.add Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILDS, Intents.FLAGS.DIRECT_MESSAGES
 
 class DiscordAdapter extends Adapter
   constructor: (robot) ->
@@ -27,9 +26,12 @@ class DiscordAdapter extends Adapter
     @rooms = {}
 
   run: ->
+    # get all process.envs if set or use default
     @token = process.env.HUBOT_DISCORD_TOKEN
     @activity = process.env.HUBOT_DISCORD_ACTIVITY || 'World Domination'
     @activityType = process.env.HUBOT_DISCORD_ACTIVITY_TYPE || 'PLAYING'
+    @intents = process.env.HUBOT_DISCORD_INTENTS || 32767
+    @partials = process.env.HUBOT_DISCORD_PARTIALS || ['MESSAGE', 'CHANNEL', 'REACTION', 'USER', 'GUILD_MEMBER']
 
     if not @token?
       @robot.logger.error "Discobot: No token specified, please set an environment variable named HUBOT_DISCORD_TOKEN"
@@ -37,15 +39,22 @@ class DiscordAdapter extends Adapter
     
     @robot.logger
     
-    @discord = new Discord.Client({ intents: myIntents })
+    myIntents = new Intents(@intents)
+
+    #invoke new client with intents and partials
+    @discord = new Discord.Client({ intents: myIntents, partials: @partials })
 
     # Extend discord.js API to hubot scripts
     @robot.client = @discord
     
+    ## EVENTS
+
     # after ready your bot will respond to info from discord
     @discord.on "ready", @.onready
+    # interaction - new in discord.js v13 - this represents a slash / command
+    @discord.on "interactionCreate", @.oninteraction
     # the basic on message event
-    @discord.on "message", @.onmessage
+    @discord.on "messageCreate", @.onmessage
     # When the bot is reconnecting
     @discord.on "reconnecting", @.onreconnecting
     # When the bot gets disconnected from the server
@@ -57,8 +66,12 @@ class DiscordAdapter extends Adapter
     # Emitted for general warnings.
     @discord.on "warn", @.onwarn
 
+    # login client with token - good luck!
     @discord.login @token
 
+  oninteraction: (interaction)  =>
+    @robot.logger.info "Discobot: Interaction received"
+ 
   onready: =>
     @robot.logger.info "Discobot: Logged in as: #{@discord.user.username}##{@discord.user.discriminator}"
     @robot.name = @discord.user.username.toLowerCase()
@@ -72,12 +85,7 @@ class DiscordAdapter extends Adapter
     
     # set activity
     # types: PLAYING,STREAMING,LISTENING,WATCHING,COMPETING - https://discord.js.org/#/docs/main/stable/typedef/ActivityType
-    @discord.user.setActivity(@activity, {type: @activityType})
-        .then (presence) ->
-          robot.logger.info "Discobot: Activity set to #{presence.activities.toString()}"
-        .catch (err) ->
-          robot.logger.error "Discobot: Error while trying to set activity"
-          robot.logger.error err
+    robot.client.user.setActivity(@activity, {type: @activityType})
 
   onmessage: (message) =>
     return if message.author.id == @discord.user.id

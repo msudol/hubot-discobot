@@ -56,8 +56,6 @@ module.exports = function(robot) {
                 if (activities.includes(activityType)) {
                     // set the currently playing game
                     robot.client.user.setActivity(value, {type: activityType})
-                        .then((presence) => {robot.logger.debug("Activity set to " + activityType + " " + value)})
-                        .catch((error) => {robot.logger.error(error)});  
                 } else {
                     return msg.reply("Bad activity type, use one of " + activities.toString());
                 }
