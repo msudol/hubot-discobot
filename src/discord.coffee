@@ -99,7 +99,12 @@ class DiscordAdapter extends Adapter
 
     @rooms[user.room] ?= message.channel
 
-    text = message.content
+    #Use clean content so <@&{id}> looks like @robot-name for replying purposes
+    text = message.cleanContent ? message.content
+
+    #If in private, pretend the robot name is part of the text for replying purposes
+    if (message.channel instanceof Discord.DMChannel)
+      text = "#{@robot.name}: #{text}"
 
     @robot.logger.debug "Discobot: Message (ID: #{message.id} from: #{user.name}##{user.discriminator}): #{text}"
     @robot.receive new TextMessage(user, text, message.id)
