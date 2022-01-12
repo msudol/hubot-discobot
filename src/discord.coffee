@@ -101,6 +101,8 @@ class DiscordAdapter extends Adapter
 
     #Use clean content so <@&{id}> looks like @robot-name for replying purposes
     text = message.cleanContent ? message.content
+    #Sometimes there's a left-to-right mark in the cleaned message that needs to be removed
+    text = text.replace /\u200B/, '';
 
     #If in private, pretend the robot name is part of the text for replying purposes
     if (message.channel instanceof Discord.DMChannel)
